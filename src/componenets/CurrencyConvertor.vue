@@ -1,37 +1,32 @@
 <template>
-  <div class="conteiner">
-    <div class="convertor__title">
-      <h3>Конвертер валют</h3>
-    </div>
-    <div class="convertor">
-      <div class="convertor__block">
-        <div class="convertor__block--name">
-          <p>У меня есть</p>
-        </div>
-        <div class="convertor__block--currency">
+  <div class="currency-converter">
+      <h3 class="currency-converter__title">Конвертер валют</h3>
+      <div class="currency-converter__convertor">
+        <div class="convertor__input">
+          <p class="convertor__input--name">У меня есть</p>
+          <div class="convertor__input--currency">
           <button class="currency--btn">{{ selectedCurrencyFrom }}</button>
           <button class="currency--btn">{{ selectedCurrencyFrom }}</button>
           <button class="currency--btn">{{ selectedCurrencyFrom }}</button>
           <span
           @click="selectCurrency('from')"
-          class="currency--btn test">
-            <svg xmlns="http://www.w3.org/2000/svg" width="52" height="28" viewBox="0 0 52 28" fill="none">
+          class="currency--btn">
+            <svg xmlns="http://www.w3.org/2000/svg" width="52" height="28"      viewBox="0 0 52 28" fill="none">
               <path d="M3.18811 3.00348L25.2222 25.0376C25.6128 25.4281 26.2459 25.4281 26.6365 25.0376L48.6706 3.00348" stroke="#C05406" stroke-width="4" stroke-linecap="square"/>
             </svg>
-        </span>
-
-
+          </span>
         </div>
-           <DropCurrency
-                v-if="showCurrencyList"
-                class="drop__currency"
-                @currency-selected="handleCurrencySelected"
-            />
-
+          <DropCurrency
+            v-if="showCurrencyList"
+            class="drop__currency"
+            @currency-selected="handleCurrencySelected"
+          />
         <div class="convertor__block--input">
           <p class="input__p">Казахстанский тенге</p>
           <input class="input__input" type="text" v-model="amountFrom">
-          <p class="input__currency">{{ selectedCurrencyFrom }} = 468.27 KZT</p>
+          <p
+           
+          class="input__currency">{{ selectedCurrencyFrom }} = </p>
         </div>
       </div>
       <div class="array">
@@ -40,20 +35,18 @@
           <path d="M46.5708 39.6822L24.5367 61.7163C24.1461 62.1069 24.1461 62.74 24.5367 63.1305L46.5708 85.1647" stroke="black" stroke-width="4" stroke-linecap="square"/>
         </svg>
       </div>
-      <div class="convertor__block">
-        <div class="convertor__block--name">
-          <p>Хочу приобрести</p>
-        </div>
-        <div class="convertor__block--currency">
-          <button class="currency--btn">{{ selectedCurrencyTo }}</button>
-          <button class="currency--btn">{{ selectedCurrencyTo }}</button>
-          <button class="currency--btn">{{ selectedCurrencyTo }}</button>
-          <span 
-          @click="selectCurrency('to')"
-          class="currency--btn">
-            <svg xmlns="http://www.w3.org/2000/svg" width="52" height="28" viewBox="0 0 52 28" fill="none">
-              <path d="M3.18811 3.00348L25.2222 25.0376C25.6128 25.4281 26.2459 25.4281 26.6365 25.0376L48.6706 3.00348" stroke="#C05406" stroke-width="4" stroke-linecap="square"/>
-            </svg>
+<!--    <div class="convertor__input">
+        <p class="convertor__input--name">Хочу приобрести</p>
+          <div class="convertor__input--currency">
+            <button class="currency--btn">{{ selectedCurrencyTo }}</button>
+            <button class="currency--btn">{{ selectedCurrencyTo }}</button>
+            <button class="currency--btn">{{ selectedCurrencyTo }}</button>
+            <span 
+            @click="selectCurrency('to')"
+            class="currency--btn">
+              <svg xmlns="http://www.w3.org/2000/svg" width="52" height="28" viewBox="0 0 52 28" fill="none">
+                <path d="M3.18811 3.00348L25.2222 25.0376C25.6128 25.4281 26.2459 25.4281 26.6365 25.0376L48.6706 3.00348" stroke="#C05406" stroke-width="4" stroke-linecap="square"/>
+              </svg>
           </span>
         </div>
         <div class="convertor__block--input">
@@ -61,14 +54,17 @@
           <input class="input__input" type="text" v-model="amountTo">
           <p class="input__currency">1 USD = 468.27 KZT</p>
         </div>
-      </div>
+      </div> -->
+      <currency-input></currency-input>
     </div>
   </div>
+  
   
 
 </template>
 
 <script setup>
+import CurrencyInput from './CurrencyInput.vue';
 import DropCurrency from './DropCurrency.vue';
 import { ref } from 'vue'; 
 
@@ -76,10 +72,6 @@ const showCurrencyList = ref(false)
 const selectedCurrencyFrom = ref('USD')
 const selectedCurrencyTo = ref('KZT')
 const currencyDropdown = ref(null)
-
-
-const selectedCurr = selectedCurrencyFrom.value
-console.log(selectedCurr)
 
 const selectCurrency = (type) => {
     currencyDropdown.value = type
@@ -98,31 +90,22 @@ const handleCurrencySelected = (currency) => {
 }
 
 
-
-
-
 </script>
 
 <style scoped>
-body {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Gothic';
-}
-.conteiner {
+.currency-converter {
     width: 100%;
     height: 100%;
 }
-.convertor {
+.currency-converter__convertor {
     display: flex;
     justify-content: center;
 }
-.convertor__title {
+.currency-converter__title {
     font-size: 64px;
     text-align: center;
 }
-.convertor__block {
+.convertor__input {
     width: 733px;
     margin: 50px;
 
@@ -130,18 +113,14 @@ body {
 .array {
     display: flex;
     flex-direction: column;
-    justify-content: end;
-    padding-bottom: 140px;
+    justify-content: center;
 }
-.convertor__block--name {
+.convertor__input--name {
     font-size: 36px;
     color: #C05406;
 }
-.convertor__block--currency {
+.convertor__input--currency {
     display: flex;
-}
-.test {
-    position: relative;
 }
 .currency--btn {
     border: 1px solid #CDCDCD;

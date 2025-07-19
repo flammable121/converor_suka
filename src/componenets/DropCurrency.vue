@@ -3,11 +3,11 @@
         <ul class="select-drop__ul">
             <li
             class="select-drop__li"
-            v-for="currency in currencies" 
-            :key="currency"
-            @click="selectCurrency(currency)"
+            v-for="[keys] in currencies" 
+            :key="keys"
+            @click="selectCurrency(keys)"
             >
-            {{ currency }}
+            {{ keys }}
             </li>
         </ul>
     </div>
@@ -17,10 +17,10 @@
 import axios from 'axios';
 import { onMounted, ref } from 'vue';
 
-const emit = defineEmits(['currency-selected'])
+const emit = defineEmits(['currency-selected', 'currency-value'])
 
 const rates = ref({})
-const currencies = ref ([])
+const currencies = ref ({})
 const selectedCurrency = ref('')
 
 const selectCurrency = (currency) => {
@@ -33,15 +33,13 @@ onMounted(async() => {
     const response = await axios.get('https://api.currencyfreaks.com/v2.0/rates/latest?apikey=a9e13e0f86234e5caa2e8a0dad0d2a66')
 
     rates.value = response.data.rates
-    currencies.value = Object.keys(rates.value)
+    currencies.value = Object.entries(rates.value)
+    emit('currency-value', currencies.value )
+    
 });
-
-
-
-
 </script>
 
-<style>
+<style lang="scss">
 .select-drop {
     font-family: "Gothic";
     font-size: 24px;
@@ -53,15 +51,23 @@ onMounted(async() => {
     overflow: auto;
     padding: 0px 20px;
     border: solid 1px #E6E6E6;
+
+    &__ul {
+    columns: 6;
+    
+    }
+
+    &__li{
+        list-style: none;
+    }
+
+    -webkit-scrollbar {
+        display: none;
+    }
 }
 
 .select-drop::-webkit-scrollbar {
     display: none;
 }
-.select-drop__ul {
-    columns: 6;
-}
-.select-drop__li {
-    list-style: none;
-}
+
 </style>
