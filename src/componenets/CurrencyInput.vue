@@ -22,14 +22,11 @@
 
 <script setup>
 
-
-
 </script>
 
 <style lang="scss" scoped>
 .convertor__input {
-    width: 733px;
-    margin: 50px;
+    width: 788px;
     & {
         font-size: 36px;
         color: #C05406;
@@ -39,12 +36,17 @@
 
 .convertor__input--currency {
     display: flex;
-
-    & button, span {
+    justify-content: space-between;
+    span,
+    button {
     border: 1px solid #CDCDCD;
     font-size: 36px;
     padding: 29px 60px;
     position: relative;
+    text-align: center;
+    justify-content: center;
+    overflow: hidden;
+    width: 100%;
     &:focus {
         background-color: #C05406;
     }
@@ -55,10 +57,12 @@
 .convertor__block--input {
     display: flex;
     flex-direction: column;
+
     & p {
         font-size: 24px;
         color: black;
     }
+
     & input {
         font-size: 100px;
         border: none;
