@@ -5,12 +5,13 @@
             <button class="currency--btn">USD</button>
             <button class="currency--btn">USD</button>
             <button class="currency--btn">USD</button>
-            <span class="currency--array">
+            <span 
+            @click="dropVisible"
+            class="currency--array">
                 <svg xmlns="http://www.w3.org/2000/svg" width="52" height="28" viewBox="0 0 52 28" fill="none">
                     <path d="M3.18811 3.00348L25.2222 25.0376C25.6128 25.4281 26.2459 25.4281 26.6365 25.0376L48.6706 3.00348" stroke="#C05406" stroke-width="4" stroke-linecap="square"/>
                 </svg>
           </span>
-          <drop-currency/>
         </div>
     <div class="convertor__block--input">
         <p class="input__p">Казахстанский тенге</p>
@@ -21,7 +22,12 @@
 </template>
 
 <script setup>
-
+defineProps({
+    dropVisible: {
+        type: Boolean,
+        required: false
+    }
+});
 </script>
 
 <style lang="scss" scoped>
@@ -57,6 +63,7 @@
     align-items: center;
     border: 1px solid #CDCDCD;
     width: 8.875rem;
+    position: relative;
   }
 }
 
