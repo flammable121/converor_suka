@@ -3,11 +3,12 @@
     <div class="drop__window">
         <ul class="drop__window--ul">
             <li 
-                v-for="[code] in currencies"
+                @click="$emit('currencySelected', code)"
+                v-for="code in currencies"
                 :key="code"
                 class="drop__window--li"
             > 
-                {{ code }}
+                {{ code }} : {{ currencyNames[code] || code }}
             </li>
         </ul>
     </div>
@@ -15,43 +16,44 @@
 </template>
 
 <script setup>
+import { currencyNames } from '@/cyrrencyNames';
+
 defineProps({
     currencies: {
         type: Array,
         required: true
     },
-    loadingCurrency: {
-        type: Boolean,
-        required: true
-    }
 });
+
+defineEmits(['currencySelected'])
 </script>
 
 <style lang="scss" scoped>
 .drop {
+    color: black;
     overflow: auto;
     z-index: 1000;
     position: absolute;
-    width: 100%;
-    height: 65.1%;
-    bottom: -8rem;
-
+    height: 350px;
     &::-webkit-scrollbar {
         display: none;
     }
 
     .drop__window--ul {
-        background-color: #ffff;
-        columns: 8; 
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        text-align: left;
+        background-color: #F1F1F1; 
     }
 
     .drop__window--li {
-        text-align: center;
         list-style: none;
-        font-size: 1.5rem;
+        font-size: 18px;
         overflow: auto;
         cursor: pointer;
-        margin: 1.6rem auto;
+        margin: auto;
+        width: calc(30%);
     }
 }
 
