@@ -4,13 +4,16 @@
             <h3 class="converter__title">Конвертер валют</h3>
             <div class="converter__box">
                 <currency-input
+                    :title="'У меня есть'"
                     :quick-currencies="quickCurrenciesFrom" 
                     :currencies="currencies"
                     :selectedCurrency="fromCurrency"
                     :amount="amountFrom"
+                    :targetCurrency="toCurrency"
                     @updateAmount="val => amountFrom = val"
                     :dropVisible="dropVisible"
                     @currencySelected="onFromCurrencySelected"
+                    :rates="rates"
                 />
                 <div class="box--array">
                     <svg xmlns="http://www.w3.org/2000/svg" width="70" height="88" viewBox="0 0 70 88" fill="none">
@@ -19,13 +22,16 @@
                     </svg>
                 </div>
                 <currency-input
+                    :title="'Хочу приобрести'"
                     :quick-currencies="quickCurrenciesTo"
                     :currencies="currencies"
                     :selectedCurrency="toCurrency"
                     :amount="amountTo"
+                    :targetCurrency="fromCurrency"
                     @updateAmount="val => amountTo = val"
                     :dropVisible="dropVisible"
                     @currencySelected="onToCurrencySelected"
+                    :rates="rates"
                 />
             </div>
         </div>
@@ -54,30 +60,49 @@ onMounted(async () => {
         const response = await axios.get('https://api.currencyfreaks.com/v2.0/rates/latest?apikey=09b7cece3b0840b3b2d908bc4aed72a7')
         rates.value = response.data.rates
         currencies.value = Object.keys(rates.value)
-        quickCurrenciesFrom.value = currencies.value.slice(0, 3)
-        quickCurrenciesTo.value = currencies.value.slice(0, 3)
+
+        quickCurrenciesFrom.value = ['USD','EUR','KZT']
+        quickCurrenciesTo.value = ['UAH','RUB','KZT']
+
+        fromCurrency.value = 'USD'
+        toCurrency.value = 'RUB'
+
 
     } catch (error) {
         console.error('Ошибка загрузки данных', error)
     }
 });
 
-watch([fromCurrency, toCurrency, amountFrom]. recalcToAmount, {immediate: true})
-
 function onFromCurrencySelected(payload) {
-    onFromCurrencySelected.value = payload.code
+    fromCurrency.value = payload.code
 
     quickCurrenciesFrom.value = [...quickCurrenciesFrom.value]
     quickCurrenciesFrom.value[payload.index] = payload.code
 }
 
 function onToCurrencySelected(payload) {
-    onToCurrencySelected.value = payload.code
+    toCurrency.value = payload.code
 
     quickCurrenciesTo.value = [...quickCurrenciesTo.value]
     quickCurrenciesTo.value[payload.index] = payload.code
 }
 
+function recalcToAmount() {
+    if (!fromCurrency.value || !toCurrency.value || amountFrom.value === '') {
+        amountTo.value = '';
+        return;
+    }
+
+    const rateFrom = rates.value[fromCurrency.value];
+    const rateTo = rates.value[toCurrency.value];
+
+    const amountInUSD = amountFrom.value / rateFrom;
+    const result = amountInUSD * rateTo;
+
+    amountTo.value = Number(result).toFixed(2);
+}
+
+watch([fromCurrency, toCurrency, amountFrom], recalcToAmount, {immediate: true})
 </script>
 
 <style lang="scss">

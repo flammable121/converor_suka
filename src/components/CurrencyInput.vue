@@ -1,6 +1,6 @@
 <template>
 <div class="convertor__input">
-    <p class="convertor__input--name">Хочу приобрести</p>
+    <p class="convertor__input--name">{{ props.title }}</p>
         <div class="convertor__input--currency">
             <button 
               v-for="(code, index) in props.quickCurrencies"
@@ -26,28 +26,38 @@
         @currencySelected="selectCurrency"
       />
         <p 
-          :key="code"
-          class="input__p">{{  }}</p>
+          class="input__p"
+          v-if="props.selectedCurrency"
+        >
+          {{ currencyNames[props.selectedCurrency] || props.selectedCurrency }}
+        </p>
         <input
           class="input__input" 
           type="number"
           :value="amount"
           @input="onInput"
         >
-        <p class="input__p">1 USD = 468.27 KZT</p>
+        <p class="input__p">{{ rateDisplay }}</p>
     </div>
 </div>
 </template>
 
 <script setup>
-import { ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 import DropCurrency from './DropCurrency.vue';
+import { currencyNames } from '@/cyrrencyNames';
 
 const props = defineProps({
+  title: {
+    type: String,
+    default: 'У меня есть'
+  },
   currencies: Array,
   quickCurrencies: Array,
   selectedCurrency: String,
   amount: String,
+  targetCurrency: String,
+  rates: Object
 });
 
 const lastClickedIndex = ref(0)
@@ -82,13 +92,28 @@ function onInput(event) {
   emit('updateAmount', event.target.value)
 }
 
+const rateDisplay = computed(() => {
+  const from = props.selectedCurrency;
+  const to = props.targetCurrency;
+
+  if (!from || !to || !props.rates[from] || !props.rates[to]) {
+    return '-';
+  }
+
+  const rate = props.rates[to] / props.rates[from];
+  const fromName = currencyNames[from] || from;
+  const toName = currencyNames[to] || to;
+
+  return `1 ${fromName} = ${rate.toFixed(2)} ${toName}`
+})
+
 const emit = defineEmits (['currencySelected', 'updateAmount'])
 </script>
 
 <style lang="scss" scoped>
 .convertor__input {
   width: 700px;
-  font-size: 2.25rem;
+  font-size: 2rem;
   box-sizing: border-box;
   color: #C05406;
   .convertor__input--name {
